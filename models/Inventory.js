@@ -6,7 +6,6 @@ const inventorySchema = new Schema({
     currentStock: {
         quantity: {type: Number, required: true},
         price: {type: Number, required: true},
-        inventoryDate: {type: Date, default: new Date()}
     },
     createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 }, {timestamps: true});
