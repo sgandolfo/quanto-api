@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const userRoutes = require('./routes/userRoutes');
 const articleRoutes = require('./routes/articleRoutes');
 const stockRoutes = require('./routes/stockRoutes');
+const inventoryRoutes = require('./routes/inventoryRoutes');
 
 const app = express();
 
@@ -39,3 +40,4 @@ app.use(bodyParser.json());
 app.use('/users', userRoutes);
 app.use('/articles', articleRoutes);
 app.use('/stockmovements', stockRoutes);
+app.use('/inventory', inventoryRoutes);

@@ -1,8 +1,10 @@
 const StockMovement = require('../models/StockMovement');
 const Article = require('../models/Article');
+const Inventory = require('../models/Inventory');
 
 const MongooseService = require( "./MongooseService" ); // Data Access Layer
-const MongooseServiceInstance = new MongooseService(StockMovement);
+const StockMovementMongooseInstance = new MongooseService(StockMovement);
+const InventoryMongooseInstance = new MongooseService(Inventory);
 
 const createStockMovement = async stockMovement => {
 
@@ -32,8 +34,7 @@ const createStockMovement = async stockMovement => {
         }
 
         for(let i = 0; i < updateArray.length ;i++) {
-            const result = await MongooseServiceInstance.update(updateArray[i]._id, {quantity: updateArray[i].quantity, isConsumed: updateArray[i].isConsumed});
-            //    StockMovement.updateOne({_id: i._id}, {quantity: i.quantity, isConsumed: i.isConsumed});
+            const result = await InventoryMongooseInstance.update(updateArray[i]._id, {quantity: updateArray[i].quantity});
             console.log(result);
         }
 
@@ -49,8 +50,8 @@ const createStockMovement = async stockMovement => {
 const calculateStockMovementPrice = async (article, valMethod, movementQuantity, movementDocument) => {
 
     try {
-        const currentStock = await StockMovement.find({isConsumed: false, articleId: article},'_id quantity price').sort({ createdAt: valMethod }).exec()
-        
+        const currentStock = await InventoryMongooseInstance.find({articleId: article},{_id, currentStock}).sort({ createdAt: valMethod }).exec()
+        console.log(currentStock);
         return { createArray, updateArray } = fillMovementArrays(movementQuantity, currentStock, movementDocument);
 
     } catch (error) {
@@ -65,28 +66,26 @@ const fillMovementArrays = (movementQuantity, currentStock, movementDocument) =>
 
     if(movementQuantity > 0) {
         currentStock.forEach(i => {
-            if (i.quantity <= movementQuantity) {
+            if (i.currentStock.quantity <= movementQuantity) {
                 updateArray.push({
                     _id: i._id.toString(),
                     quantity: 0,
-                    isConsumed: true
                 });
                 createArray.push({
                     ...movementDocument,
-                    quantity: i.quantity * -1,
-                    price: i.price,
+                    quantity: i.currentStock.quantity * -1,
+                    price: i.currentStock.price,
                 });
                 movementQuantity -= i.quantity;
             } else {
                 updateArray.push({
                     _id: i._id.toString(),
-                    quantity: i.quantity - movementQuantity,
-                    isConsumed: false
+                    quantity: i.currentStock.quantity - movementQuantity,
                 })
                 createArray.push({
                     ...movementDocument,
                     quantity: movementQuantity * -1,
-                    price: i.price,
+                    price: i.currentStock.price,
                 });
                 movementQuantity = 0;
             }

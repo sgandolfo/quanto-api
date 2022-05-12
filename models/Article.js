@@ -9,10 +9,6 @@ const articleSchema = new Schema({
     valuationMethod: {type: String, default: 'FIFO'},
     unitOfMeasure: {type: String, required: true},
     minStock: {type: Number},
-    currentStock: {
-        quantity: {type: Number, required: true},
-        value: {type: Number, required: true},
-    },
     createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 }, {timestamps: true});
 

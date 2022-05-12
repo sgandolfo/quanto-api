@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Article = require('./Article');
+const Inventory = require('./Inventory');
 
 const stockMovementSchema = new Schema({
     articleId: {type: mongoose.Schema.Types.ObjectId, ref: 'Article'},
@@ -12,14 +12,20 @@ const stockMovementSchema = new Schema({
 }, {timestamps: true});
 
 stockMovementSchema.post('save', function(doc) {
-    console.log(`We receive the following ${doc}`);
-    Article.findById(doc.articleId)
-        .then(result => {
-            result.currentStock.quantity += doc.quantity;
-            result.currentStock.value += doc.quantity * doc.price
-            result.save()
-        })
-        .catch(err => console.log(err));
+
+    if (doc.movement_type === 'purchase') {
+        const newInventory = Inventory({
+            articleId: doc.articleId,
+            currentStock: {
+                quantity: doc.quantity,
+                price: doc.price
+            }
+        });
+
+        newInventory.save();
+
+    }
+    
   });
 
 const StockMovement = mongoose.model('StockMovement', stockMovementSchema);

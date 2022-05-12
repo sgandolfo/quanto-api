@@ -10,8 +10,6 @@ const inventorySchema = new Schema({
     createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 }, {timestamps: true});
 
-articleSchema.plugin(mongooseIntl, { languages: ['nl', 'it', 'fr'], defaultLanguage: 'fr'});
+const Inventory = mongoose.model('Inventory', inventorySchema);
 
-const Article = mongoose.model('Article', articleSchema);
-
-module.exports = Article;
+module.exports = Inventory;

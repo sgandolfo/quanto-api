@@ -10,6 +10,13 @@ router.get('/', (req, res) => {
         .catch(err => console.log(err));
 });
 
+// get the inventory for a given article
+router.get('/:articleId', (req, res) => {
+    Inventory.find({ articleId: req.body.params })
+    .then((result) => res.send(result))
+    .catch(err => res.status(500).send(err));
+})
+
 // Create a new inventory
 router.post('/', (req, res) => {
     const newInventory = new Inventory(req.body);
@@ -19,9 +26,4 @@ router.post('/', (req, res) => {
     .catch(err => res.status(500).send(err));
 });
 
-// get the inventory for a given article
-router.get('/:articleId', (req, res) => {
-    Inventory.find({ articleId: req.body.params })
-    .then((result) => res.send(result))
-    .catch(err => res.status(500).send(err));
-})
+module.exports = router;
