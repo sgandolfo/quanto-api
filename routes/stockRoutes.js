@@ -23,14 +23,6 @@ router.get('/consumed/:flag', (req, res) => {
 // Create a new stock movement
 router.post('/', async (req, res) => {
 
-    // try {
-    //     const createdStockMovement = await StockMovementService.createStockMovement(req.body);
-    //     return res.send(createdStockMovement);
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(500).send(error)
-    // }
-
     if (req.body.movement_type === 'purchase') {
         const result = await StockMovement.create(req.body);
         return res.send(result);
