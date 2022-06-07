@@ -1,28 +1,24 @@
 const express = require('express');
 const User = require('../models/User');
+const UserController = require('../controllers/userController');
 
 const router = express.Router();
 
 // User routes
 
 // Get all users
-router.get('/', (req, res) => {
-    User.find().sort({ createdAt: -1 })
-    .then((result) => {
-        res.send(result);
-    })
-    .catch(err => console.log(err));
-});
+router.get('/', UserController.getAllUsers);
+
+// Get user by login
+router.get('/user/login/:login', UserController.getUserByLogin);
+
+// Get user by id
+router.get('/user/id/:id', UserController.getUserById);
 
 // Create a new user
-router.post('/', (req, res) => {
-    console.log(req.body);
+router.post('/', UserController.createUser);
 
-    const user = new User(req.body);
-
-    user.save()
-        .then((result) => res.send(result))
-        .catch((err) => console.log(err));
-})
+// Update a user
+router.put('/user/id/:id', UserController.updateUser);
 
 module.exports = router;
