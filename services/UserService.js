@@ -1,6 +1,5 @@
 const User = require('../models/User'); //User Model
 const MongooseService = require('./MongooseService'); //Data Access Layer
-const bcrypt = require('bcrypt'); //bcrypt for password encryption
 
 class UserService {
   /**
@@ -12,59 +11,8 @@ class UserService {
   }
 
     /**
-   * @description Attempt to create a user with the provided object
-   * @param userToCreate {object} Object containing all required fields to
-   * create post
-   * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
-   */
-
-     async create ( userToCreate ) {
-        try {
-            // Replace the users password with the hashed password
-            userToCreate.password = await hashPassWord(userToCreate.password);
-
-            // Call the create function of the MongooseServiceInstance to create the user in the database
-            const result = await this.MongooseServiceInstance.create( userToCreate );
-
-            return { success: true, body: result };
-
-        } catch ( err ) {
-            return { success: false, error: err };
-        }
-      }
-
-        /**
-   * @description Attempt to update a user with the provided object
-   * @param userToUpdate {String} ID of the user to be updated
-   * @param userData {Object} user data to be updated
-   * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
-   */
-
-      async update ( userToUpdate, userData ) {
-          try {
-              // Check if user exists
-                const user = await this.MongooseServiceInstance.findById(userToUpdate)
-
-                // If user does not exist return success is false and empty body
-                if (!user) {
-                    return { success: false, status: 404, body: {}};
-                }
-
-                // Replace the user password with the hashed password
-                userData.password = await hashPassWord(userData.password);
-
-                const result = await this.MongooseServiceInstance.update(userToUpdate, userData);
-
-                return { success: true, body: result };
-            
-          } catch (err) {
-              return { success: false, body: err };
-          }
-      }
-
-    /**
    * @description Attempt to find a specific user by his login
-   * @param userToGet {object} Object containing the login of the user to get
+   * @param userToGet {String} Object containing the login of the user to get
    * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
    */
       async getUserByLogin( userToGet ) {
@@ -109,17 +57,23 @@ class UserService {
               return { success: false, error: err };
           }
       }
-}
 
-const hashPassWord = async (password) => {
-    // Generate a salt to hash password
-    const salt = await bcrypt.genSalt(10);
+          /**
+   * @description Attempt to delete a specific user by his id
+   * @param userIdToGet {string} Required: ID for the object to retrieve
+   * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
+   */
 
-    // Set password to hashed password
-    const hashedPassword = await bcrypt.hash(password, salt);
+      async deleteUser (id) {
+          try {
+                const result = await this.MongooseServiceInstance.delete(id);
 
-    //return the hashedpassword
-    return hashedPassword;
+                return { success: true, body: result };
+          } catch (error) {
+                return { success: false, error: err };
+          }
+
+      }
 }
 
 module.exports = UserService;

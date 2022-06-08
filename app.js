@@ -5,11 +5,16 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const User = require('./models/User');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
 
 const userRoutes = require('./routes/userRoutes');
 const articleRoutes = require('./routes/articleRoutes');
 const stockRoutes = require('./routes/stockRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -36,7 +41,14 @@ app.use(
   );
 app.use(bodyParser.json());
 
+/* PASSPORT LOCAL AUTHENTICATION */
+app.use(passport.initialize());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(User.authenticate()));
+
 // routes
+app.use('/', authRoutes);
 app.use('/users', userRoutes);
 app.use('/articles', articleRoutes);
 app.use('/stockmovements', stockRoutes);

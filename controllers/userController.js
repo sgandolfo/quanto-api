@@ -1,22 +1,7 @@
 const UserService = require( "../services/UserService" );
 const UserServiceInstance = new UserService();
 
-module.exports = { createUser, getUserByLogin, getAllUsers, getUserById, updateUser };
-
-/**
- * @description Create a user with the provided body
- * @param req {object} Express req object 
- * @param res {object} Express res object
- * @returns {Promise<*>}
- */
-async function createUser ( req, res ) {
-  try {
-    const createdUser = await UserServiceInstance.create( req.body );
-    return res.send( createdUser );
-  } catch ( err ) {
-    res.status( 500 ).send( error );
-  }
-}
+module.exports = { getUserByLogin, getAllUsers, getUserById, deleteUser };
 
 /**
  * @description Gets a user with the provided login
@@ -66,18 +51,16 @@ async function getAllUsers(req, res) {
 }
 
 /**
- * @description Update a user with the provided body
+ * @description Delete a user based on it's id
  * @param req {object} Express req object 
  * @param res {object} Express res object
  * @returns {Promise<*>}
  */
 
- async function updateUser(req, res) {
+async function deleteUser (req, res) {
     try {
-        const updatedUser = await UserServiceInstance.update( req.params.id, req.body );
-
-        return res.send( updatedUser );
-
+        const result = await UserServiceInstance.deleteUser(req.body._id);
+        return res.send(result)
     } catch (error) {
         res.status(500).send(error);
     }

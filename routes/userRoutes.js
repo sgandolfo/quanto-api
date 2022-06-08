@@ -1,10 +1,10 @@
 const express = require('express');
-const User = require('../models/User');
 const UserController = require('../controllers/userController');
 
 const router = express.Router();
 
 // User routes
+// TODO: Add middleware authentication based on JWT token to ensure only admins can retrieve user data
 
 // Get all users
 router.get('/', UserController.getAllUsers);
@@ -15,10 +15,7 @@ router.get('/user/login/:login', UserController.getUserByLogin);
 // Get user by id
 router.get('/user/id/:id', UserController.getUserById);
 
-// Create a new user
-router.post('/', UserController.createUser);
-
-// Update a user
-router.put('/user/id/:id', UserController.updateUser);
+// Delete a user
+router.delete('/user/id/:id', UserController.deleteUser);
 
 module.exports = router;
