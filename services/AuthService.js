@@ -9,6 +9,11 @@ class AuthService {
         
     }
 
+    /**
+   * @description Attempt to create a new user
+   * @param userToCreate {Object} Object containing the user to be created
+   * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
+   */
     async register (userToCreate) {
 
             try {
@@ -23,6 +28,11 @@ class AuthService {
             }
     };
 
+    /**
+   * @description Attempt to login a user with his/her credentials
+   * @param userToCreate {Object} Object containing the user to be created
+   * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
+   */
     async login (userToLogIn) {
         try {
             const { user } = await User.authenticate('local')(userToLogIn.username, userToLogIn.password);
@@ -38,6 +48,11 @@ class AuthService {
         }
     }
 
+    /**
+   * @description Attempt to change a user's password
+   * @param userToCreate {Object} Object containing the user to be created
+   * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
+   */
     async changePassword (userData) {
         try {
             const user = await User.findByUsername(userData.username);
@@ -52,6 +67,11 @@ class AuthService {
         }
     }
 
+        /**
+   * @description Attempt to reset a user's password
+   * @param userToCreate {Object} Object containing the user to be created
+   * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
+   */
     async resetPassword (userData) {
         try {
             const user = await User.findByUsername(userData.username);
