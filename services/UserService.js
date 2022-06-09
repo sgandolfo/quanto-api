@@ -32,7 +32,6 @@ class UserService {
    * @param userIdToGet {string} Required: ID for the object to retrieve
    * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
    */
-
     async getUserById ( userIdToGet ) {
         try {
             // Get the name, login and role of a user by searching for the id of the user
@@ -43,7 +42,7 @@ class UserService {
         }
     }
 
-        /**
+    /**
      * @description Attempt to get all users
      * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
      */
@@ -58,17 +57,16 @@ class UserService {
           }
       }
 
-          /**
+    /**
    * @description Attempt to delete a specific user by his id
    * @param userIdToGet {string} Required: ID for the object to retrieve
    * @returns {Promise<{success: boolean, error: *}|{success: boolean, body: *}>}
    */
-
       async deleteUser (id) {
           try {
                 const result = await this.MongooseServiceInstance.delete(id);
 
-                return { success: true, body: result };
+                return { success: true, body: 'User deleted successfully' };
           } catch (error) {
                 return { success: false, error: err };
           }

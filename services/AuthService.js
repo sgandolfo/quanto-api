@@ -40,7 +40,7 @@ class AuthService {
             if (! user) {
                 return { success: false, body: "Username or password incorrect"};
             } else {
-                const token =  jwt.sign({userId : user._id, username:user.username}, config.jwtSecret, {expiresIn: '24h'});
+                const token =  jwt.sign({userId:user._id, username:user.username, role:user.role}, config.jwtSecret, {expiresIn: '24h'});
                 return {success: true, body: "Authentication successful", token: token};
             }
         } catch (error) {

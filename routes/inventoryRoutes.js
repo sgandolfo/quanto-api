@@ -21,18 +21,18 @@ router.get('/total', async (req, res) => {
 
 // get the inventory for a given article
 router.get('/:articleId', (req, res) => {
-    Inventory.find({ articleId: req.body.params })
+    Inventory.find({ articleId: req.params.articleId })
     .then((result) => res.send(result))
     .catch(err => res.status(500).send(err));
 });
 
-// Create a new inventory
-router.post('/', (req, res) => {
-    const newInventory = new Inventory(req.body);
-
-    newInventory.save()
-    .then((result) => res.send(result))
-    .catch(err => res.status(500).send(err));
+// get the inventory value for a given article
+router.get('/:articleId', async (req, res) => {
+    const result = await Inventory.find({ articleId: req.params.articleId })
+    const invVal = inventoryValue(result);
+    res.send({
+        inventory_value: invVal.toFixed(2)
+    });
 });
 
 //Calculate the total inventory value by looping through all open inventory items and performing a P*Q calculation

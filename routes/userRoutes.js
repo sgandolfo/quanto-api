@@ -1,21 +1,23 @@
 const express = require('express');
 const UserController = require('../controllers/userController');
+const auth = require('../middleware/authenticate');
+const User = require('../models/User');
+const ac = require('../middleware/authorize');
 
 const router = express.Router();
 
 // User routes
-// TODO: Add middleware authentication based on JWT token to ensure only admins can retrieve user data
-
-// Get all users
-router.get('/', UserController.getAllUsers);
 
 // Get user by login
-router.get('/user/login/:login', UserController.getUserByLogin);
+router.get('/user/login/:login', auth, UserController.getUserByLogin);
 
 // Get user by id
-router.get('/user/id/:id', UserController.getUserById);
+router.get('/user/id/:id', auth, UserController.getUserById);
+
+// Get all users
+router.get('/', auth, ac('readAny', 'user'), UserController.getAllUsers);
 
 // Delete a user
-router.delete('/user/id/:id', UserController.deleteUser);
+router.delete('/user/id/:id', auth, ac('deleteAny', 'user'), UserController.deleteUser);
 
 module.exports = router;

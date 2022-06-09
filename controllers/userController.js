@@ -59,7 +59,7 @@ async function getAllUsers(req, res) {
 
 async function deleteUser (req, res) {
     try {
-        const result = await UserServiceInstance.deleteUser(req.body._id);
+        const result = await UserServiceInstance.deleteUser(req.params.id);
         return res.send(result)
     } catch (error) {
         res.status(500).send(error);
